@@ -1,0 +1,44 @@
+import ballerina/http;
+import ballerina/io;
+import ballerina/time;
+
+type Programme record{|
+    string programme_Title;
+    string programme_code;
+    string faculty;
+    string department;
+    string qualification_level;
+    time:DateTime registration_date;
+    Course[] courses;
+
+|}
+;
+type Course record {
+    string course_code;
+    int course_nqf_level;
+    string course_name;
+}
+ ;
+ // Define a list to hold programmes
+ map<Programme> programmes = {};
+
+ service /programmes on new http:Listener(8080) {
+
+    //Creating a new programme
+    resource function post programmes(Programme newProgramme) returns string|http:Error {
+        if (programmes.hasKey(newProgramme.programme_code)){
+            return error("Sorry, but the program you're trying to add already exists in our system, try again");
+        }
+        programmes[newProgramme.programme_code] = newProgramme;
+        return "Thank you, the programme was successfully added."
+    ;}
+    //View all System Programmes
+    resource function get getAllProgrammes() returns Programme[] |http:Response{
+        return programmes.values();
+    }
+
+    //Programme Ammendment
+    resource function put updateProgramme(string programmeCode, Programme updatedProgramme) returns string{
+        if (!programmes.hasKey(programmeCode)) {
+            return "Programme not found"; 
+    }}
