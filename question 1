@@ -45,7 +45,7 @@ service /programmes on new http:Listener(8080) {
         }
     }
 
-    // Update a programme by code
+     // Update a programme by code
     resource function put programmes/[string code](http:Caller caller, http:Request req) returns error? {
         Programme? existingProgramme = programmes[code];
         if existingProgramme is Programme {
@@ -65,7 +65,7 @@ service /programmes on new http:Listener(8080) {
     // Delete a programme by code
     resource function delete programmes/[string code](http:Caller caller, http:Request req) returns error? {
         if programmes.hasKey(code) {
-            programmes.remove(code);
+            Programme remove = programmes.remove(code);
             check caller->respond("Programme deleted successfully");
         } else {
             check caller->respond("Programme not found", 404);
@@ -95,8 +95,8 @@ service /programmes on new http:Listener(8080) {
         check caller->respond(programmesInFaculty);
     }
 }
-
+    }
 function calculateIfDueForReview(string registrationDate) returns boolean {
     // Logic to check if 5 years have passed since registration
     return true; // Simplified for now
-}
+}}
