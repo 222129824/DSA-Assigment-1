@@ -1,0 +1,102 @@
+import ballerina/http;
+
+type Programme record {
+    string programmeCode;
+    int NQFLevel;
+    string faculty;
+    string department;
+    string title;
+    string registrationDate;
+    string[] courses;
+};
+
+map<Programme> programmes = {};
+
+// RESTful API Service to manage programmes
+service /programmes on new http:Listener(8080) {
+
+    // Add a new programme
+    resource function post programmes(http:Caller caller, http:Request req) returns error? {
+        json programmeJson = check req.getJsonPayload();
+        Programme newProgramme = check programmeJson.fromJsonWithType(Programme);
+
+        programmes[newProgramme.programmeCode] = newProgramme;
+        check caller->respond("Programme added successfully");
+    }
+
+    // Retrieve all programmes
+    resource function get programmes(http:Caller caller, http:Request req) returns error? {
+        json programmesJson = programmes.toJson();
+        check caller->respond(programmesJson);
+    }
+
+    // Retrieve a specific programme by code
+    resource function get programmes/[string code](http:Caller caller, http:Request req) returns error? {
+        Programme? programme = programmes[code];
+        if programme is Programme {
+            // Programme found, respond with its details
+            check caller->respond(programme.toJson());
+        } else { 
+            // Programme not found, send 404 response
+            http:Response response = new; 
+            response.statusCode = 404;
+            response.setJsonPayload({ "reason": "Programme not found"});   
+            check caller->respond(response);
+        }
+    }
+
+    // Update a programme by code
+    resource function put programmes/[string code](http:Caller caller, http:Request req) returns error? {
+        Programme? existingProgramme = programmes[code];
+        if existingProgramme is Programme {
+            json updatedData = check req.getJsonPayload();
+            Programme updatedProgramme = check updatedData.fromJsonWithType(Programme);
+
+            programmes[code] = updatedProgramme;
+            check caller->respond("Programme updated successfully");
+        } else {
+            http:Response response = new;
+            response.statusCode = 404;
+            response.setJsonPayload({ "reason": "Programme not found"}); 
+            check caller->respond(response);
+        }
+    }
+
+    // Delete a programme by code
+    resource function delete programmes/[string code](http:Caller caller, http:Request req) returns error? {
+        if programmes.hasKey(code) {
+            programmes.remove(code);
+            check caller->respond("Programme deleted successfully");
+        } else {
+            check caller->respond("Programme not found", 404);
+        }
+    }
+
+    // Retrieve programmes due for review
+    resource function get programmes/review(http:Caller caller, http:Request req) returns error? {
+        json[] programmesDueForReview = [];
+        foreach var item in programmes.entries() {
+            json value = item.value; 
+            if (calculateIfDueForReview(value.registrationDate)) {
+                programmesDueForReview.push(value.toJson());
+            }
+        }        
+        check caller->respond(programmesDueForReview);
+    }
+
+    // Retrieve programmes by faculty
+    resource function get programmes/faculty/[string faculty](http:Caller caller, http:Request req) returns error? {
+        json[] programmesInFaculty = [];
+        foreach var item in programmes.entries() {
+            json value = item.value; 
+            if (value.faculty == faculty) {
+            programmesInFaculty.push(value.toJson());
+
+        check caller->respond(programmesInFaculty);
+    }
+}
+
+function calculateIfDueForReview(string registrationDate) returns boolean {
+    // Logic to check if 5 years have passed since registration
+    return true; // Simplified for now
+}
