@@ -1,0 +1,92 @@
+import ballerina/http;
+import ballerina/log;
+
+type Course record {
+    string courseName;
+    string courseCode;
+    int nqfLevel;
+};
+
+type Programme record {
+    string programmeCode;
+    int nqfLevel;
+    string faculty;
+    string department;
+    string title;
+    string registrationDate;
+    Course[] courses;
+};
+
+map<Programme> programmes = {};
+
+service /programmes on new http:Listener(8080) {
+
+    // Add a new programme
+    resource function post add(Programme programme) returns json {
+        if (programmes.hasKey(programme.programmeCode)) {
+            return { "error": "Programme with this code already exists." };
+        }
+        programmes[programme.programmeCode] = programme;
+        return { "message": "Programme added successfully." };
+    }
+
+    // Retrieve all programmes
+    resource function get all() returns json {
+        return programmes.values();
+    }
+
+    // Update an existing programme
+    resource function put update(string programmeCode, Programme programme) returns json {
+        if (!programmes.hasKey(programmeCode)) {
+            return { "error": "Programme not found." };
+        }
+        programmes[programmeCode] = programme;
+        return { "message": "Programme updated successfully." };
+    }
+
+    // Retrieve a specific programme
+    resource function get details(string programmeCode) returns json {
+        if (!programmes.hasKey(programmeCode)) {
+            return { "error": "Programme not found." };
+        }
+        return programmes[programmeCode];
+    }
+
+    // Delete a programme
+    resource function delete delete(string programmeCode) returns json {
+        if (!programmes.remove(programmeCode)) {
+            return { "error": "Programme not found." };
+        }
+        return { "message": "Programme deleted successfully." };
+    }
+
+    // Retrieve programmes due for review
+    resource function get dueForReview() returns json {
+        json duePrograms = [];
+        foreach Programme programme in programmes.values() {
+            // Assuming registration date is in "yyyy-mm-dd" format
+            if (calculateDueForReview(programme.registrationDate)) {
+                duePrograms.push(programme);
+            }
+        }
+        return duePrograms;
+    }
+
+    // Retrieve programmes by faculty
+    resource function get byFaculty(string faculty) returns json {
+        json facultyPrograms = [];
+        foreach Programme programme in programmes.values() {
+            if (programme.faculty == faculty) {
+                facultyPrograms.push(programme);
+            }
+        }
+        return facultyPrograms;
+    }
+
+    // Helper function to calculate if the programme is due for review
+    function calculateDueForReview(string registrationDate) returns boolean {
+        // Add logic to calculate if the programme is due for review based on the current date
+        // For simplicity, assume the review is due if 5 years have passed
+        return true; // Placeholder for actual logic
+    }
+}
