@@ -1,0 +1,57 @@
+import ballerina/io;
+import ballerina/http;
+import ballerina/log;
+
+http:Client programmeClient = checkpanic new("http://localhost:8080/programmes");
+
+type Programme record {
+    
+};
+
+public function main() returns error? {
+    // Example of adding a new programme
+    Programme newProgramme = {
+        programmeCode: "CS101",
+        nqfLevel: 7,
+        faculty: "Engineering",
+        department: "Computer Science",
+        title: "Bachelor of Computer Science",
+        registrationDate: "2024-01-01",
+        courses: [{courseName: "Data Structures", courseCode: "CS201", nqfLevel: 7}]
+    };
+    var response = programmeClient->post("/add", newProgramme);
+    check response;
+
+    // Example of retrieving all programmes
+    var programmesResponse = programmeClient->get("/all");
+    check programmesResponse;
+
+    // Example of updating a programme
+    Programme updatedProgramme = {
+        programmeCode: "CS101",
+        nqfLevel: 8,
+        faculty: "Engineering",
+        department: "Computer Science",
+        title: "Bachelor of Computer Science - Updated",
+        registrationDate: "2024-01-01",
+        courses: [{courseName: "Data Structures", courseCode: "CS201", nqfLevel: 8}]
+    };
+    var updateResponse = programmeClient->put("/update/CS101", updatedProgramme);
+    check updateResponse;
+
+    // Example of retrieving a specific programme
+    var specificProgrammeResponse = programmeClient->get("/details/CS101");
+    check specificProgrammeResponse;
+
+    // Example of deleting a programme
+    var deleteResponse = programmeClient->delete("/delete/CS101");
+    check deleteResponse;
+
+    // Example of retrieving programmes due for review
+    var dueForReviewResponse = programmeClient->get("/dueForReview");
+    check dueForReviewResponse;
+
+    // Example of retrieving programmes by faculty
+    var byFacultyResponse = programmeClient->get("/byFaculty/Engineering");
+    check byFacultyResponse;
+}
