@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package shopping;
+
+service ShoppingService {
+    rpc AddProduct(AddProductRequest) returns (AddProductResponse);
+    rpc CreateUsers(stream CreateUserRequest) returns (CreateUserResponse);
+    rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
+    rpc RemoveProduct(RemoveProductRequest) returns (RemoveProductResponse);
+    rpc ListAvailableProducts(Empty) returns (ListProductsResponse);
+    rpc SearchProduct(SearchProductRequest) returns (SearchProductResponse);
+    rpc AddToCart(AddToCartRequest) returns (AddToCartResponse);
+    rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse);
+}
+
+message AddProductRequest {
+    string name = 1;
+    string description = 2;
+    float price = 3;
+    int32 stock_quantity = 4;
+    string sku = 5;
+    string status = 6; // "available" or "out of stock"
+}
+
+message AddProductResponse {
+    string product_code = 1; // Unique code for the added product
+}
+
+message CreateUserRequest {
+    string user_id = 1;
+    string user_type = 2; // "customer" or "admin"
+}
+
+message CreateUserResponse {
+    string message = 1;
+}
+
+message UpdateProductRequest {
+    string product_code = 1;
+    string name = 2;
+    string description = 3;
+    float price = 4;
+    int32 stock_quantity = 5;
+}
+
+message UpdateProductResponse {
+    bool success = 1;
+}
+
+message RemoveProductRequest {
+    string product_code = 1;
+}
+
+message RemoveProductResponse {
+    repeated Product products = 1; // Updated list of products
+}
+
+message ListProductsResponse {
+    repeated Product products = 1; // List of available products
+}
+
+message SearchProductRequest {
+    string sku = 1;
+}
+
+message SearchProductResponse {
+    Product product = 1; // Product details if found
+}
+
+message AddToCartRequest {
+    string user_id = 1;
+    string sku = 2; // SKU of the product to add
+}
+
+message AddToCartResponse {
+    string message = 1; // Confirmation message
+}
+
+message PlaceOrderRequest {
+    string user_id = 1; // User placing the order
+}
+
+message PlaceOrderResponse {
+    string order_id = 1; // Confirmation of order placement
+}
+
+message Product {
+    string name = 1;
+    string description = 2;
+    float price = 3;
+    int32 stock_quantity = 4;
+    string sku = 5;
+    string status = 6; // "available" or "out of stock"
+}
+
+message Empty {}
