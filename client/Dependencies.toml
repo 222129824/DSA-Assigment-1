@@ -270,7 +270,7 @@ modules = [
 ]
 
 [[package]]
-org = "tuyoleni"
+org = "linda"
 name = "client"
 version = "0.1.0"
 dependencies = [
@@ -282,6 +282,6 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "tuyoleni", packageName = "client", moduleName = "client"}
+	{org = "linda", packageName = "client", moduleName = "client"}
 ]
 
