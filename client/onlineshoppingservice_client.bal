@@ -47,23 +47,23 @@ public function main() returns error? {
 }
 
 function printHeader() {
-    io:println("\n+===============================================+");
+    io:println("\n+==+");
     io:println("|          Online Shopping CLI System           |");
-    io:println("+===============================================+");
+    io:println("+==+");
 }
 
 function printMenu() {
-    io:println("\n+--------------------------------------------+");
-    io:println("|  1. Add Product                              |");
-    io:println("|  2. Update Product                           |");
-    io:println("|  3. Remove Product                           |");
-    io:println("|  4. List Available Products                  |");
-    io:println("|  5. Search Product                           |");
-    io:println("|  6. Add to Cart                              |");
-    io:println("|  7. Place Order                              |");
-    io:println("|  8. Create Users                             |");
-    io:println("|  9. Exit                                     |");
-    io:println("+----------------------------------------------+");
+    io:println("\n+--+");
+    io:println("|  1. Add Product    |");
+    io:println("|  2. Update Product |");
+    io:println("|  3. Remove Product |");
+    io:println("|  4. List Available Products|");
+    io:println("|  5. Search Product|");
+    io:println("|  6. Add to Cart   |");
+    io:println("|  7. Place Order   |");
+    io:println("|  8. Create Users  |");
+    io:println("|  9. Exit          |");
+    io:println("+---+");
 }
 
 function addProduct() returns error? {
