@@ -1,7 +1,10 @@
+//Firts creation is for the syntax declaration
 syntax = "proto3";
 
+//we then move on to declaring a package, which in this case is the shopping package
 package shopping;
 
+//within our package, we define the service
 service ShoppingService {
     rpc AddProduct(AddProductRequest) returns (AddProductResponse);
     rpc CreateUsers(stream CreateUserRequest) returns (CreateUserResponse);
@@ -12,7 +15,7 @@ service ShoppingService {
     rpc AddToCart(AddToCartRequest) returns (AddToCartResponse);
     rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse);
 }
-
+//we move onto message definition
 message AddProductRequest {
     string name = 1;
     string description = 2;
