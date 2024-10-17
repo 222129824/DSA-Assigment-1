@@ -2,14 +2,16 @@ import ballerina/io;
 import ballerina/lang.'float as langfloat;
 import ballerina/lang.'int as langint;
 
+//client initialization
 OnlineShoppingServiceClient ep = check new ("http://localhost:9090");
-
+//create the main function
 public function main() returns error? {
-    printHeader();
+    printHeader(); //menu
     while true {
         printMenu();
         string choice = io:readln("\nEnter your choice: ");
 
+//we have the menu choice handlers
         match choice {
             "1" => {
                 check addProduct();
@@ -46,12 +48,12 @@ public function main() returns error? {
     }
 }
 
-function printHeader() {
+function printHeader() { //formated
     io:println("\n+==+");
     io:println("|          Online Shopping CLI System           |");
     io:println("+==+");
 }
-
+//lists menu options
 function printMenu() {
     io:println("\n+--+");
     io:println("|  1. Add Product    |");
@@ -65,7 +67,7 @@ function printMenu() {
     io:println("|  9. Exit          |");
     io:println("+---+");
 }
-
+//prompts user for details
 function addProduct() returns error? {
     Product request = {
         name: prompt("Enter product name: "),
