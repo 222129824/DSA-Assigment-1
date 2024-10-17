@@ -1,9 +1,11 @@
 import ballerina/grpc;
 
 listener grpc:Listener ep = new (9090);
-
+// the descriptor provides metadata about the service
 @grpc:Descriptor {value: SHOPPING_SERVICE_DESC}
-service "ShoppingService" on ep {
+service "ShoppingService" on ep { // the shoping service is listening for requests on ep
+
+//lets declare our remote functions
 
     remote function AddProduct(AddProductRequest value) returns AddProductResponse|error {
     }
